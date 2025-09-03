@@ -3,6 +3,12 @@ question2_clinical
 Sarahy Martinez
 
 ``` r
+# to create the sankey diagram we need to install the remotes package and githbut package 
+#install.packages("remotes")
+#remotes::install_github("davidsjoberg/ggsankey")
+```
+
+``` r
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 ```
@@ -23,7 +29,9 @@ library(ggridges)
 library(hexbin)
 library(patchwork)
 library(readxl)
-
+library(ggsankey)
+library(ggplot2)
+library(dplyr) 
 
 theme_set(theme_minimal()+ theme(legend.position = "bottom"))
 
@@ -75,7 +83,7 @@ stacked_data_tidy =
 ggplot(stacked_data_tidy, aes(x = year, 
                               y = population_attributable_risk, 
                               fill = risk_factors_for_stroke_in_blacks)) +
-  geom_area(color = "white", size = 1, alpha = 0.9) +
+  geom_area(color = "white", size = 2, alpha = 0.95) +
   scale_fill_manual(values = c(
     "Diabetes" = "#D55E00",
     "Hypercholesterolemia" = "#E69F00",
@@ -107,4 +115,51 @@ name = NULL)+
     ## Warning: Removed 34 rows containing non-finite outside the scale range
     ## (`stat_align()`).
 
-![](question2_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+![](question2_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+
+Using ggsankey
+
+``` r
+# converting data so it can align with the sankey graph
+sankey_data = stacked_data_tidy %>%
+  mutate(year = as.character(year)) %>%
+  make_long(year, risk_factors_for_stroke_in_blacks)
+
+
+sankey_temp <- sankey_data %>%
+  left_join(
+    stacked_data_tidy %>% mutate(year = as.character(year)),
+    by = c("x" = "year", "node" = "risk_factors_for_stroke_in_blacks")
+  ) %>%
+  mutate(value = ifelse(is.na(population_attributable_risk), 1, population_attributable_risk)) %>%
+  select(-population_attributable_risk)
+
+
+ggplot(sankey_temp,
+       aes(x = x,
+           next_x = next_x,
+           node = node,
+           next_node = next_node,
+           fill = node,
+           value = value)) +
+  geom_sankey(flow.alpha = 0.9, node.color = "white") +
+  scale_fill_manual(values = c(
+    "Diabetes" = "#D55E00",
+    "Hypercholesterolemia" = "#E69F00",
+    "Hypertension" = "#009E73",
+    "Obesity" = "#56B4E9",
+    "Smoking" = "#7B68EE"
+  ), name = NULL) +
+  labs(
+    title = "Risk Contributors to Stroke in Blacks",
+    x = "Year",
+    y = "Population Attributable Risk"
+  ) +
+  theme_sankey(base_size = 14) +
+  theme(
+    legend.position = "bottom",
+    plot.title = element_text(size = 16, face = "bold", hjust = 0.5)
+  )
+```
+
+![](question2_files/figure-gfm/unnamed-chunk-6-1.png)<!-- --> \`\`

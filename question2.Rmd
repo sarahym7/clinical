@@ -5,6 +5,13 @@ output: github_document
 ---
 
 ```{r}
+# to create the sankey diagram we need to install the remotes package and githbut package 
+#install.packages("remotes")
+#remotes::install_github("davidsjoberg/ggsankey")
+
+```
+
+```{r}
 
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
@@ -12,6 +19,9 @@ library(ggridges)
 library(hexbin)
 library(patchwork)
 library(readxl)
+library(ggsankey)
+library(ggplot2)
+library(dplyr) 
 
 theme_set(theme_minimal()+ theme(legend.position = "bottom"))
 
@@ -66,28 +76,6 @@ stacked_data_tidy =
 
 # Plots 
 
-Download Sankey package to resemble graph 
-```{r}
-# install.packages("remotes")
-# remotes::install_github("davidsjoberg/ggsankey")
-library(ggsankey)
-# install.packages("ggplot2")
-library(ggplot2)
-# install.packages("dplyr")
-library(dplyr) # Also needed
-
-ggplot(df, aes(x = x, 
-               next_x = next_x, 
-               node = node, 
-               next_node = next_node,
-               fill = factor(node))) +
-  geom_sankey() +
-  theme_sankey(base_size = 16) 
- 
-
-
-```
-
 ```{r}
 
 
@@ -123,11 +111,50 @@ name = NULL)+
 
 
 
+Using ggsankey
+
+```{r}
+# converting data so it can align with the sankey graph
+sankey_data = stacked_data_tidy %>%
+  mutate(year = as.character(year)) %>%
+  make_long(year, risk_factors_for_stroke_in_blacks)
 
 
+sankey_temp <- sankey_data %>%
+  left_join(
+    stacked_data_tidy %>% mutate(year = as.character(year)),
+    by = c("x" = "year", "node" = "risk_factors_for_stroke_in_blacks")
+  ) %>%
+  mutate(value = ifelse(is.na(population_attributable_risk), 1, population_attributable_risk)) %>%
+  select(-population_attributable_risk)
 
 
+ggplot(sankey_temp,
+       aes(x = x,
+           next_x = next_x,
+           node = node,
+           next_node = next_node,
+           fill = node,
+           value = value)) +
+  geom_sankey(flow.alpha = 0.9, node.color = "white") +
+  scale_fill_manual(values = c(
+    "Diabetes" = "#D55E00",
+    "Hypercholesterolemia" = "#E69F00",
+    "Hypertension" = "#009E73",
+    "Obesity" = "#56B4E9",
+    "Smoking" = "#7B68EE"
+  ), name = NULL) +
+  labs(
+    title = "Risk Contributors to Stroke in Blacks",
+    x = "Year",
+    y = "Population Attributable Risk"
+  ) +
+  theme_sankey(base_size = 14) +
+  theme(
+    legend.position = "bottom",
+    plot.title = element_text(size = 16, face = "bold", hjust = 0.5)
+  )
 
 
-
-
+```
+``
