@@ -1,38 +1,12 @@
-
----
-title: "Clinical  Analyst Questions"
-author: "Sarahy Martinez"
-output: github_document
----
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-library(tidyverse)
-library(ggridges)
-library(hexbin)
-library(patchwork)
-library(sjPlot)
-
-
-theme_set(theme_minimal()+ theme(legend.position = "bottom"))
-
-options(
-  
-  ggplot2.continuous.colour = "viridis",
-  ggplot2.continuous.fill = "viridis"
-)
-
-scale_fill_discrete = scale_fill_viridis_d()    
-
-scale_colour_discrete = scale_fill_viridis_d() 
-
-```
+Clinical Analyst Questions
+================
+Sarahy Martinez
 
 ## Question 1
 
 Reading in the data and tidying to ensure easier analysis
 
-```{r,message=FALSE}
+``` r
 # reading in the data sets 
 
 master_data =
@@ -40,12 +14,9 @@ master_data =
   "C:/Users/sarah/OneDrive/Documents/Data Science/clinical/master_data.csv",
   na = c("NA", ".", "")
 )
-
-
 ```
 
-```{r, message=FALSE}
-
+``` r
 adverse_data =
   read_csv("C:/Users/sarah/OneDrive/Documents/Data Science/clinical/t05xc.csv", na = c("NA", ".", "")) %>%   #placed NA for any missing data for this and following data sets
   mutate(hyper = if_else(k >= 5.5, 1,0)) %>%  # assigning values if >= 5.5 then Hyperkalemia = 1 and else =0
@@ -65,12 +36,9 @@ lab_test_data =
     hyper_lab = ifelse(all(is.na(hyper)), 0, max(hyper, na.rm = TRUE)), # assigning  0 if missing also
     .groups = "drop"
   )
- 
 ```
 
-
-```{r, message=FALSE}
- 
+``` r
 # merging both adverse and lab test data anf grouping them by master id so that we can have all the data correctly merged
 hyper_all = full_join(adverse_data, lab_test_data, by = "master_id") %>%
   mutate(
@@ -81,11 +49,9 @@ hyper_all = full_join(adverse_data, lab_test_data, by = "master_id") %>%
     )
   ) %>%
   select(master_id, hyperkalemia) #just keeping relevant variables
-
 ```
 
-```{r, message=FALSE}
-
+``` r
 # Merge with master dataset so we can have the hyperklemia variable appear and we are left joining so that we have matching records
 final_data = master_data %>%
   left_join(hyper_all, by = "master_id") %>%
@@ -98,32 +64,28 @@ final_data = master_data %>%
 #keeping only variables that are relevant to the analysis, keeping those that maybe confounders, direct exposures, and outcome variables
 ```
 
-```{r, message=FALSE}
+``` r
 #summary stats
 total_hyper <- sum(final_data$hyperkalemia == 1, na.rm = TRUE)
 total_no_hyper <- sum(final_data$hyperkalemia == 0, na.rm = TRUE)
 n_total <- nrow(final_data)
-
 ```
 
-Out of the total study population (`r n_total` participants), `r total_hyper` experienced hyperkalemia, while `r total_no_hyper` did not.
+Out of the total study population (3445 participants), 479 experienced
+hyperkalemia, while 2966 did not.
 
-
-### Analysis 
+### Analysis
 
 A. Is the drug associated with hyperkalemia?
 
-```{r}
-
-
+``` r
 # using binomial regression because binary
 
 fit = glm(hyperkalemia ~ drug, data = final_data,
            family = binomial())
-
 ```
 
-```{r}
+``` r
 # calculate the odds ratio
 
 fit %>%  
@@ -131,23 +93,28 @@ fit %>%
   mutate(OR = exp(estimate)) %>% 
   select(term, log_OR = estimate, OR, p.value) %>% 
   knitr::kable(digits = 3)
-
 ```
 
-Based on the logistic regression, there is evidence that the drug is associated with hyperkalemia because the drug p value < 0.05 which makes it statistically significant. 
+| term        | log_OR |    OR | p.value |
+|:------------|-------:|------:|--------:|
+| (Intercept) | -0.639 | 0.528 |       0 |
+| drug        | -0.830 | 0.436 |       0 |
+
+Based on the logistic regression, there is evidence that the drug is
+associated with hyperkalemia because the drug p value \< 0.05 which
+makes it statistically significant.
 
 B. Does the drug effect depend on geographic region?
 
-```{r}
+``` r
 # to test this use logistic regression + interaction
 
 fit_inter = glm(hyperkalemia ~ drug * region,
  data = final_data,
            family = binomial())
-
 ```
 
-```{r}
+``` r
 # assess interaction via plot 
 
 # plot
@@ -163,29 +130,33 @@ plot_model(fit_inter,
   )
 ```
 
-After plotting the regression the lines between region and drug cross over suggesting a significant interaction. So it appears that drug effect depends on region.
+![](question1_clinical_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+
+After plotting the regression the lines between region and drug cross
+over suggesting a significant interaction. So it appears that drug
+effect depends on region.
 
 ### Running statistical test for interaction
 
-```{r}
+``` r
 # using ANOVA to compare the two models LRT
 anova(fit, fit_inter,  #reduced model in the first argument and full model in the second
   test = "LRT")
 ```
 
+    ## Analysis of Deviance Table
+    ## 
+    ## Model 1: hyperkalemia ~ drug
+    ## Model 2: hyperkalemia ~ drug * region
+    ##   Resid. Df Resid. Dev Df Deviance  Pr(>Chi)    
+    ## 1      3443     2710.9                          
+    ## 2      3441     2659.3  2   51.615 6.195e-12 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-The test confirms that at the 5% significance level, we reject the null hypothesis that the two models are equal to eachother.Since the only difference between the two models is that an interaction term is added in the complete model, we reject the hypothesis that there is no interaction between the age and the sex (p-value = 6.195e-12 or p-value =0.000 ). 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+The test confirms that at the 5% significance level, we reject the null
+hypothesis that the two models are equal to eachother.Since the only
+difference between the two models is that an interaction term is added
+in the complete model, we reject the hypothesis that there is no
+interaction between the age and the sex (p-value = 6.195e-12 or p-value
+=0.000 ).
