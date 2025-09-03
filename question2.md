@@ -79,6 +79,8 @@ stacked_data_tidy =
 
 # Plots
 
+## Plot with white space
+
 ``` r
 ggplot(stacked_data_tidy, aes(x = year, 
                               y = population_attributable_risk, 
@@ -116,6 +118,40 @@ name = NULL)+
     ## (`stat_align()`).
 
 ![](question2_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+
+## Plot without whitespace
+
+``` r
+ggplot(stacked_data_tidy, aes(x = year, 
+                              y = population_attributable_risk, 
+                              fill = risk_factors_for_stroke_in_blacks)) +
+  geom_area(color = "white", size = 0, alpha = 0.95) +
+  scale_fill_manual(values = c(
+    "Diabetes" = "#D55E00",
+    "Hypercholesterolemia" = "#E69F00",
+    "Hypertension" = "#009E73",
+    "Obesity" = "#56B4E9",
+    "Smoking" = "#7B68EE"
+  ),
+name = NULL)+
+  scale_x_continuous(breaks = seq(190, 2010, 5)) +
+  labs(
+    title = " Risk Contributors to Stroke in Blacks ",   # <-- now at top
+    y = "Population Attributable Risk",                                
+    x = "Year"
+  ) +
+  theme(
+    legend.position = "bottom",
+    panel.grid.minor = element_blank(),
+    axis.title = element_text(size = 14),
+    plot.title = element_text(size = 16, face = "bold", hjust = 0.5) # centered title
+  )
+```
+
+    ## Warning: Removed 34 rows containing non-finite outside the scale range
+    ## (`stat_align()`).
+
+![](question2_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
 
 Using ggsankey
 
@@ -162,4 +198,4 @@ ggplot(sankey_temp,
   )
 ```
 
-![](question2_files/figure-gfm/unnamed-chunk-6-1.png)<!-- --> \`\`
+![](question2_files/figure-gfm/unnamed-chunk-7-1.png)<!-- --> \`\`
