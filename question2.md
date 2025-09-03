@@ -49,7 +49,8 @@ stacked_data = read_excel("C:/Users/sarah/OneDrive/Documents/Data Science/clinic
     year_2000 = `2000`,
     year_2005 = `2005`,
     year_2010 = `2010`
-  )
+  ) %>%
+   janitor::clean_names()
 ```
 
 ``` r
@@ -61,7 +62,9 @@ stacked_data_tidy =
     year_1990:year_2010,
     names_to = "year",    
     names_prefix = "year_", 
-    values_to = "PopulationAttributableRisk")          
+    values_to = "PopulationAttributableRisk") %>% 
+   mutate(year = as.numeric(year)) %>%  # changed from character to numeric so year can be treated as value
+   janitor::clean_names() # clean names so that variable names follow better naming conventions
                                 
 #pivot longer will make it easier to graph the risk factors and years separately 
 ```
