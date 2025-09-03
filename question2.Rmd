@@ -12,8 +12,6 @@ library(ggridges)
 library(hexbin)
 library(patchwork)
 library(readxl)
-library(ggsankey)
-
 
 theme_set(theme_minimal()+ theme(legend.position = "bottom"))
 
@@ -68,6 +66,28 @@ stacked_data_tidy =
 
 # Plots 
 
+Download Sankey package to resemble graph 
+```{r}
+# install.packages("remotes")
+# remotes::install_github("davidsjoberg/ggsankey")
+library(ggsankey)
+# install.packages("ggplot2")
+library(ggplot2)
+# install.packages("dplyr")
+library(dplyr) # Also needed
+
+ggplot(df, aes(x = x, 
+               next_x = next_x, 
+               node = node, 
+               next_node = next_node,
+               fill = factor(node))) +
+  geom_sankey() +
+  theme_sankey(base_size = 16) 
+ 
+
+
+```
+
 ```{r}
 
 
@@ -99,9 +119,6 @@ name = NULL)+
 
 
 ```
-
-
-
 
 
 
