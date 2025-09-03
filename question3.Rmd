@@ -1,0 +1,29 @@
+---
+title: "question_3"
+author: "Sarahy Martinez"
+date: "2025-09-03"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(ggridges)
+library(hexbin)
+library(patchwork)
+library(sjPlot)
+
+```
+
+```{r}
+# read in the dataset 
+
+ccu_data =
+   read_csv(
+  "C:/Users/sarah/OneDrive/Documents/Data Science/clinical/202210 - EDW - CCU_assessment.csv",
+  na = c("NA", ".", "")
+)
+
+
+```
+
