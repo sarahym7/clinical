@@ -28,3 +28,16 @@ scale_colour_discrete = scale_fill_viridis_d()
 
 ```
 
+
+```{r}
+#read in the dataset
+
+stacked_data = read.csv("C:\Users\sarah\OneDrive\Documents\Data Science\clinical\Stacked_column_stroke_blacks_noAF.xlsx"
+                        ,
+  na = c("NA", ".", "")
+)
+
+
+
+```
+
