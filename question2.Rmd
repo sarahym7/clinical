@@ -1,0 +1,5 @@
+---
+title: "question2_clinical"
+author: "Sarahy Martinez"
+output: github_document
+---
