@@ -12,6 +12,7 @@ library(ggridges)
 library(hexbin)
 library(patchwork)
 library(readxl)
+library(ggsankey)
 
 
 theme_set(theme_minimal()+ theme(legend.position = "bottom"))
@@ -73,7 +74,7 @@ stacked_data_tidy =
 ggplot(stacked_data_tidy, aes(x = year, 
                               y = population_attributable_risk, 
                               fill = risk_factors_for_stroke_in_blacks)) +
-  geom_area(color = "white", size = 1, alpha = 0.9) +
+  geom_area(color = "white", size = 2, alpha = 0.95) +
   scale_fill_manual(values = c(
     "Diabetes" = "#D55E00",
     "Hypercholesterolemia" = "#E69F00",

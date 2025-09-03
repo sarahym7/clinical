@@ -13,19 +13,6 @@ library(hexbin)
 library(patchwork)
 library(sjPlot)
 
-
-theme_set(theme_minimal()+ theme(legend.position = "bottom"))
-
-options(
-  
-  ggplot2.continuous.colour = "viridis",
-  ggplot2.continuous.fill = "viridis"
-)
-
-scale_fill_discrete = scale_fill_viridis_d()    
-
-scale_colour_discrete = scale_fill_viridis_d() 
-
 ```
 
 ## Question 1
