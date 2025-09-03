@@ -68,3 +68,43 @@ stacked_data_tidy =
                                 
 #pivot longer will make it easier to graph the risk factors and years separately 
 ```
+
+# Plots
+
+``` r
+ggplot(stacked_data_tidy, aes(x = year, 
+                              y = population_attributable_risk, 
+                              fill = risk_factors_for_stroke_in_blacks)) +
+  geom_area(color = "white", size = 1, alpha = 0.9) +
+  scale_fill_manual(values = c(
+    "Diabetes" = "#D55E00",
+    "Hypercholesterolemia" = "#E69F00",
+    "Hypertension" = "#009E73",
+    "Obesity" = "#56B4E9",
+    "Smoking" = "#7B68EE"
+  ),
+name = NULL)+
+  scale_x_continuous(breaks = seq(190, 2010, 5)) +
+  labs(
+    title = " Risk Contributors to Stroke in Blacks ",   # <-- now at top
+    y = "Population Attributable Risk",                                
+    x = "Year"
+  ) +
+  theme(
+    legend.position = "bottom",
+    panel.grid.minor = element_blank(),
+    axis.title = element_text(size = 14),
+    plot.title = element_text(size = 16, face = "bold", hjust = 0.5) # centered title
+  )
+```
+
+    ## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+    ## ℹ Please use `linewidth` instead.
+    ## This warning is displayed once every 8 hours.
+    ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+    ## generated.
+
+    ## Warning: Removed 34 rows containing non-finite outside the scale range
+    ## (`stat_align()`).
+
+![](question2_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
