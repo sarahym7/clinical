@@ -1,19 +1,8 @@
----
-title: "question_3"
-author: "Sarahy Martinez"
-output: github_document
----
+question_3
+================
+Sarahy Martinez
 
-
-```{r setup, include=FALSE}
-
-library(tidyverse)
-library(dplyr)
-library(lubridate)
-
-```
-
-```{r}
+``` r
 # read in the dataset 
 
 ccu_data =
@@ -23,14 +12,21 @@ ccu_data =
 ) %>% 
   janitor::clean_names() %>% 
   select(mrn_hidden, enc_no_hidden,adt_evnt_nm,from_dept, adt_dttm_hidden,to_dept)
-  
 ```
 
+    ## New names:
+    ## Rows: 3524 Columns: 7
+    ## ── Column specification
+    ## ──────────────────────────────────────────────────────── Delimiter: "," chr
+    ## (4): ADT_EVNT_NM, FROM_DEPT, ADT_DTTM_hidden, TO_DEPT dbl (2): MRN_hidden,
+    ## ENC_NO_hidden lgl (1): ...7
+    ## ℹ Use `spec()` to retrieve the full column specification for this data. ℹ
+    ## Specify the column types or set `show_col_types = FALSE` to quiet this message.
+    ## • `` -> `...7`
 
 Recoding data from the notes regarding:
 
-```{r}
-
+``` r
 updated_data = ccu_data %>% 
     mutate(adt_dttm = mdy_hm(adt_dttm_hidden)) %>% #mutate adt so that date time are more legible
     group_by(mrn_hidden, enc_no_hidden) %>%  #grouping by id since its the common identifier and instructions say to group by both variables
@@ -47,7 +43,17 @@ updated_data = ccu_data %>%
     first_icu_los = as.numeric(difftime(first_icu_discharge,   # use sql diff time to calculate the length of stay between admin and discharge and want in hrs
                                         first_icu_admission,
                                         units = "hours")))
-
-# under first_icu_admission some values will appear inf that s
 ```
 
+    ## Warning: There were 128 warnings in `summarise()`.
+    ## The first warning was:
+    ## ℹ In argument: `first_icu_admission = min(adt_dttm[grepl("ICU", to_dept)],
+    ##   na.rm = TRUE)`.
+    ## ℹ In group 20: `mrn_hidden = 714834` and `enc_no_hidden = 29205539535`.
+    ## Caused by warning in `min.default()`:
+    ## ! no non-missing arguments to min; returning Inf
+    ## ℹ Run `dplyr::last_dplyr_warnings()` to see the 127 remaining warnings.
+
+``` r
+# under first_icu_admission some values will appear inf that s
+```
