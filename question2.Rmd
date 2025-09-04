@@ -86,9 +86,9 @@ ggplot(stacked_data_tidy, aes(x = year,
                               fill = risk_factors_for_stroke_in_blacks)) +
   geom_area(color = "white", size = 2, alpha = 0.95) +
   scale_fill_manual(values = c(
+      "Hypertension" = "#009E73",
     "Diabetes" = "#D55E00",
     "Hypercholesterolemia" = "#E69F00",
-    "Hypertension" = "#009E73",
     "Obesity" = "#56B4E9",
     "Smoking" = "#7B68EE"
   ),
@@ -145,31 +145,27 @@ name = NULL)+
 ```
 
 
-Attemp using ggsankey, however the datapoints appear vertical. I have never used or made sankey plots but this was my attempt. 
+Attemp using ggsankey, however the datapoints appear vertical and do not resemble the graph. I have never used or made sankey plots but this was my attempt. 
 
 ```{r}
+
 # converting data so it can align with the sankey graph
 sankey_data = stacked_data_tidy %>%
   mutate(year = as.character(year)) %>%
-  make_long(year, risk_factors_for_stroke_in_blacks)
+  mutate(risk_factors_for_stroke_in_blacks = as.character(risk_factors_for_stroke_in_blacks)) %>%  #swtich to ask character bc the sankey wont take numerical values
+  mutate(population_attributable_risk = as.character(population_attributable_risk)) %>% 
+  make_long(year, risk_factors_for_stroke_in_blacks, population_attributable_risk)
 
+sankey_clean <- sankey_data %>%
+  filter(!is.na(node), node != "NA")
 
-sankey_temp <- sankey_data %>%
-  left_join(
-    stacked_data_tidy %>% mutate(year = as.character(year)),
-    by = c("x" = "year", "node" = "risk_factors_for_stroke_in_blacks")
-  ) %>%
-  mutate(value = ifelse(is.na(population_attributable_risk), 1, population_attributable_risk)) %>%
-  select(-population_attributable_risk)
-
-
-ggplot(sankey_temp,
-       aes(x = x,
-           next_x = next_x,
-           node = node,
-           next_node = next_node,
-           fill = node,
-           value = value)) +
+ggplot(sankey_clean, aes(
+  x = x,
+  next_x = next_x,
+  node = node,
+  next_node = next_node,
+  fill = node
+)) +
   geom_sankey(flow.alpha = 0.9, node.color = "white") +
   scale_fill_manual(values = c(
     "Diabetes" = "#D55E00",
@@ -188,6 +184,5 @@ ggplot(sankey_temp,
     legend.position = "bottom",
     plot.title = element_text(size = 16, face = "bold", hjust = 0.5)
   )
-
 ```
-``
+
