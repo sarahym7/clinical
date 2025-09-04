@@ -145,7 +145,7 @@ name = NULL)+
 ```
 
 
-Using ggsankey
+Attemp using ggsankey, however the datapoints appear vertical. I have never used or made sankey plots but this was my attempt. 
 
 ```{r}
 # converting data so it can align with the sankey graph
@@ -188,7 +188,6 @@ ggplot(sankey_temp,
     legend.position = "bottom",
     plot.title = element_text(size = 16, face = "bold", hjust = 0.5)
   )
-
 
 ```
 ``

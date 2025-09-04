@@ -153,7 +153,8 @@ name = NULL)+
 
 ![](question2_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
 
-Using ggsankey
+Attemp using ggsankey, however the datapoints appear vertical. I have
+never used or made sankey plots but this was my attempt.
 
 ``` r
 # converting data so it can align with the sankey graph
