@@ -21,7 +21,7 @@ ccu_data =
   "C:/Users/sarah/OneDrive/Documents/Data Science/clinical/202210 - EDW - CCU_assessment.csv",
   na = c("NA", ".", "")
 ) %>% 
-  janitor::clean_names() %>% 
+  janitor::clean_names() %>%  #clean names so we have proper naming conventions
   select(mrn_hidden, enc_no_hidden,adt_evnt_nm,from_dept, adt_dttm_hidden,to_dept)
   
 ```
