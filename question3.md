@@ -14,16 +14,6 @@ ccu_data =
   select(mrn_hidden, enc_no_hidden,adt_evnt_nm,from_dept, adt_dttm_hidden,to_dept)
 ```
 
-    ## New names:
-    ## Rows: 3524 Columns: 7
-    ## ── Column specification
-    ## ──────────────────────────────────────────────────────── Delimiter: "," chr
-    ## (4): ADT_EVNT_NM, FROM_DEPT, ADT_DTTM_hidden, TO_DEPT dbl (2): MRN_hidden,
-    ## ENC_NO_hidden lgl (1): ...7
-    ## ℹ Use `spec()` to retrieve the full column specification for this data. ℹ
-    ## Specify the column types or set `show_col_types = FALSE` to quiet this message.
-    ## • `` -> `...7`
-
 Recoding data from the notes regarding:
 
 ``` r

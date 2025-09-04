@@ -13,7 +13,7 @@ library(lubridate)
 
 ```
 
-```{r}
+```{r,message=FALSE, warning=FALSE}
 # read in the dataset 
 
 ccu_data =
