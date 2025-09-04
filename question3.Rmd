@@ -29,7 +29,7 @@ ccu_data =
 
 Recoding data from the notes regarding:
 
-```{r, message=FALSE}
+```{r, message=FALSE, warning=FALSE}
 
 updated_data = ccu_data %>% 
     mutate(adt_dttm = mdy_hm(adt_dttm_hidden)) %>% #mutate adt so that date time are more legible

@@ -43,17 +43,6 @@ updated_data = ccu_data %>%
     first_icu_los = as.numeric(difftime(first_icu_discharge,   # use sql diff time to calculate the length of stay between admin and discharge and want in hrs
                                         first_icu_admission,
                                         units = "hours")))
-```
 
-    ## Warning: There were 128 warnings in `summarise()`.
-    ## The first warning was:
-    ## ℹ In argument: `first_icu_admission = min(adt_dttm[grepl("ICU", to_dept)],
-    ##   na.rm = TRUE)`.
-    ## ℹ In group 20: `mrn_hidden = 714834` and `enc_no_hidden = 29205539535`.
-    ## Caused by warning in `min.default()`:
-    ## ! no non-missing arguments to min; returning Inf
-    ## ℹ Run `dplyr::last_dplyr_warnings()` to see the 127 remaining warnings.
-
-``` r
 # under first_icu_admission some values will appear inf that s
 ```
